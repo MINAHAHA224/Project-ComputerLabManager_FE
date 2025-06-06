@@ -1,0 +1,104 @@
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Space, Modal, message, Popconfirm, Card, Typography, Tag } from 'antd';
+import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
+import requestApi from '../../api/requestApi';
+import TicketDetail from '../../components/specific/TicketDetail'; // Component xem chi tiết
+
+const { Title } = Typography;
+
+const MyRequests = () => {
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [isDetailVisible, setIsDetailVisible] = useState(false);
+    const [selectedTicket, setSelectedTicket] = useState(null);
+
+    const fetchRequests = async () => {
+        setLoading(true);
+        try {
+            const response = await requestApi.getMyRequests();
+            setRequests(response.data || []);
+        } catch (error) {
+            message.error('Lỗi khi tải danh sách yêu cầu!');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchRequests();
+    }, []);
+
+    const showDetailModal = async (id) => {
+        try {
+            const response = await requestApi.getMyRequestById(id);
+            setSelectedTicket(response.data);
+            setIsDetailVisible(true);
+        } catch (error) {
+            message.error("Lỗi khi lấy chi tiết yêu cầu!");
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await requestApi.deleteMyRequest(id);
+            message.success('Hủy yêu cầu thành công!');
+            fetchRequests();
+        } catch (error) {
+            message.error(error.message || 'Hủy yêu cầu thất bại!');
+        }
+    };
+
+    const getStatusTag = (status) => {
+        let color = 'geekblue';
+        if (status?.includes('REJECTED') || status?.includes('FAILED')) color = 'volcano';
+        if (status?.includes('APPROVED') || status?.includes('SUCCESSFULLY')) color = 'green';
+        if (status?.includes('WAITING') || status?.includes('PENDING')) color = 'gold';
+        return <Tag color={color}>{status}</Tag>;
+    }
+
+    const columns = [
+        { title: 'ID', dataIndex: 'requestTicketId', key: 'requestTicketId' },
+        { title: 'Loại yêu cầu', dataIndex: 'typeRequest', key: 'typeRequest' },
+        { title: 'Ngày gửi', dataIndex: 'dateSent', key: 'dateSent' },
+        { title: 'Trạng thái', dataIndex: 'statusOverall', key: 'statusOverall', render: getStatusTag },
+        {
+            title: 'Hành động',
+            key: 'action',
+            render: (_, record) => (
+                <Space>
+                    <Button icon={<EyeOutlined />} onClick={() => showDetailModal(record.requestTicketId)}>Xem</Button>
+                    {record.statusOverall?.includes('WAITING') && (
+                        <Popconfirm
+                            title="Hủy yêu cầu"
+                            description="Bạn có chắc muốn hủy yêu cầu này?"
+                            onConfirm={() => handleDelete(record.requestTicketId)}
+                            okText="Đồng ý"
+                            cancelText="Không"
+                        >
+                            <Button icon={<DeleteOutlined />} danger>Hủy</Button>
+                        </Popconfirm>
+                    )}
+                </Space>
+            ),
+        },
+    ];
+
+    return (
+        <Card>
+            <Title level={3}>Yêu cầu của tôi</Title>
+            <Table columns={columns} dataSource={requests} loading={loading} rowKey="requestTicketId" bordered />
+
+            <Modal
+                title="Chi tiết Yêu cầu"
+                open={isDetailVisible}
+                onCancel={() => setIsDetailVisible(false)}
+                footer={[<Button key="back" onClick={() => setIsDetailVisible(false)}>Đóng</Button>]}
+                width={800}
+            >
+                {selectedTicket && <TicketDetail ticket={selectedTicket} />}
+            </Modal>
+        </Card>
+    );
+};
+
+export default MyRequests;
