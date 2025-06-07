@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Modal, Form, Input, InputNumber, Select, message, Popconfirm, Card, Typography } from 'antd';
+import {
+    Table,
+    Button,
+    Space,
+    Modal,
+    Form,
+    Input,
+    InputNumber,
+    Select,
+    message,
+    Popconfirm,
+    Card,
+    Typography,
+    App
+} from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import creditClassApi from '../../api/creditClassApi';
 
@@ -7,6 +21,10 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const CreditClassManagement = () => {
+    // Sử dụng hook để lấy `message` API đã được gắn context
+    const { message } = App.useApp();
+    const DURATION = 3; // <<<--- Định nghĩa thời gian hiển thị (giây)
+
     const [creditClasses, setCreditClasses] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -26,7 +44,7 @@ const CreditClassManagement = () => {
             const response = await creditClassApi.getAll();
             setCreditClasses(response.data || []);
         } catch (error) {
-            message.error('Lỗi khi tải danh sách lớp tín chỉ!');
+            message.error('Lỗi khi tải danh sách lớp tín chỉ!' , DURATION);
         } finally {
             setLoading(false);
         }
@@ -41,7 +59,7 @@ const CreditClassManagement = () => {
             setSubjects(subjectsRes.data || []);
             setClassrooms(classroomsRes.data || []);
         } catch (error) {
-            message.error('Lỗi khi tải dữ liệu cho form!');
+            message.error('Lỗi khi tải dữ liệu cho form!' , DURATION);
         }
     };
 
@@ -99,7 +117,7 @@ const CreditClassManagement = () => {
             }
             setIsModalVisible(true);
         } catch(e) {
-            message.error("Lỗi khi lấy chi tiết lớp tín chỉ!");
+            message.error("Lỗi khi lấy chi tiết lớp tín chỉ!" , DURATION);
         }
     };
 
@@ -115,15 +133,15 @@ const CreditClassManagement = () => {
                     ...values,
                 };
                 await creditClassApi.update(payload);
-                message.success('Cập nhật lớp tín chỉ thành công!');
+                message.success('Cập nhật lớp tín chỉ thành công!' , DURATION);
             } else {
                 await creditClassApi.create(values);
-                message.success('Thêm lớp tín chỉ thành công!');
+                message.success('Thêm lớp tín chỉ thành công!' , DURATION);
             }
             setIsModalVisible(false);
             fetchCreditClasses();
         } catch (error) {
-            message.error(error.message || 'Thao tác thất bại!');
+            message.error(error.message || 'Thao tác thất bại!' , DURATION);
         }
     };
 
@@ -133,7 +151,7 @@ const CreditClassManagement = () => {
             message.success('Xóa lớp tín chỉ thành công!');
             fetchCreditClasses();
         } catch (error) {
-            message.error(error.message || 'Xóa thất bại! Lớp có thể đã được lên lịch.');
+            message.error(error.message || 'Xóa thất bại! Lớp có thể đã được lên lịch.' , DURATION);
         }
     };
 
