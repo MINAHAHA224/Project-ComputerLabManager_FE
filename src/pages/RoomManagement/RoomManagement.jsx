@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Modal, Form, Input, InputNumber, Select, message, Popconfirm, Card, Typography } from 'antd';
+import { Table, Button, Space, Modal, Form, Input, InputNumber, Select, message, Popconfirm, Card, Typography, App } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import roomApi from '../../api/roomApi';
 
@@ -13,6 +13,11 @@ const facilitiesData = [
 ];
 
 const RoomManagement = () => {
+
+    // Sử dụng hook để lấy `message` API đã được gắn context
+    const { message } = App.useApp();
+    const DURATION = 3; // <<<--- Định nghĩa thời gian hiển thị (giây)
+
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -78,19 +83,29 @@ const RoomManagement = () => {
             payload.idRoom = editingRoom.idRoom;
         }
 
-        try {
-            if (editingRoom) {
-                await roomApi.updateRoom(payload);
-                message.success('Cập nhật phòng máy thành công!');
-            } else {
-                await roomApi.createRoom(payload);
-                message.success('Thêm phòng máy thành công!');
-            }
+            try {
+            let response;
+                if (editingRoom) {
+                    response =  await roomApi.updateRoom(payload);
+
+
+                } else {
+                    response =   await roomApi.createRoom(payload);
+
+                }
+                console.log("status" ,typeof (response.status) )
+                if ( response.status === 200){
+                    console.log( "messageSS",response.message)
+                    message.success(response.message ||'Cập nhật phòng máy thành công!', DURATION);
+                }else {
+                    console.log( "messageEE",response.message)
+                    message.error(response.message ||'Cập nhật phòng máy không thành công!', DURATION);
+                }
             setIsModalVisible(false);
             fetchRooms(); // Tải lại danh sách
         } catch (error) {
             console.error("Failed to save room:", error);
-            message.error(error.message || 'Thao tác thất bại!');
+            message.error(error.message || 'Thao tác thất bại!', DURATION);
         }
     };
 
