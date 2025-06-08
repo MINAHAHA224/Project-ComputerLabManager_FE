@@ -1281,7 +1281,7 @@ const CalendarManagement = () => {
   const fetchSchedules = async () => {
     setLoading(true);
     try {
-      const response = await calendarApi.getAll();
+      const response = await calendarApi.getForManagement();
       setSchedules(response.data || []);
     } catch (error) {
       message.error('Lỗi khi tải danh sách lịch!', DURATION);

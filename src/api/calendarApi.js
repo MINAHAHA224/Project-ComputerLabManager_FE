@@ -6,6 +6,18 @@ const calendarApi = {
         const url = '/calendarManagement';
         return axiosClient.get(url);
     },
+    getForManagement: () => {
+        const url = '/calendarManagement';
+        return axiosClient.get(url);
+    },
+
+    // API cho tất cả người dùng đã đăng nhập (GV, CSVC, TK...)
+    getForUser: () => {
+        const url = '/calendar'; // <<<--- API ĐÚNG
+        return axiosClient.get(url);
+    },
+
+
 
     // GET /calendarManagement/create
     getCreateData: () => {

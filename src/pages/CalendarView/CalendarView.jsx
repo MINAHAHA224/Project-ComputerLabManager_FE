@@ -20,7 +20,7 @@ const CalendarView = () => {
         setLoading(true);
         try {
             // API /calendar trả về lịch của người dùng hiện tại
-            const response = await calendarApi.getAll();
+            const response = await calendarApi.getForUser();
             setSchedules(response.data || []);
         } catch (error) {
             message.error('Lỗi khi tải lịch thực hành!');
