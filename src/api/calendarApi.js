@@ -48,6 +48,12 @@ const calendarApi = {
         const url = `/calendarManagement/delete/${id}`;
         return axiosClient.delete(url);
     },
+
+    // API mới
+    deleteCluster: (calendarId) => {
+        const url = `/calendarManagement/delete-cluster/${calendarId}`;
+        return axiosClient.delete(url);
+    },
 };
 
 export default calendarApi;
