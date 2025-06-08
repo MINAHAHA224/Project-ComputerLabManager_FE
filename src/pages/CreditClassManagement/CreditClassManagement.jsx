@@ -12,7 +12,8 @@ import {
     Popconfirm,
     Card,
     Typography,
-    App
+    App,
+    Switch
 } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import creditClassApi from '../../api/creditClassApi';
@@ -102,9 +103,14 @@ const CreditClassManagement = () => {
         try {
             const response = await creditClassApi.getById(record.creditClassId);
             const detail = response.data;
+
+            // Nếu có tổ hợp, thì đó là nhóm thực hành
+            const isPractice = detail.combination && detail.combination.length > 0;
+
             form.setFieldsValue({
                 numberOfStudentLTC: detail.numberOfStudentLTC,
                 group: detail.group.trim(),
+                isPractice: isPractice, // <<== Set giá trị cho Switch
                 // `teacher` trong DTO detail là string, ta cần ID.
                 // May mắn là API update trả về `listTeacher`
                 // Ta sẽ tìm teacherId từ listTeacher đó
@@ -209,6 +215,7 @@ const CreditClassManagement = () => {
                 onCancel={handleCancel}
                 footer={null}
                 width={600}
+                destroyOnClose // Giữ lại để reset form
             >
                 <Form form={form} layout="vertical" name="creditclass_form" onFinish={onFinish}>
                     {/* Fields for Create mode */}
@@ -242,7 +249,14 @@ const CreditClassManagement = () => {
                     <Form.Item name="group" label="Nhóm" rules={[{ required: true }, { pattern: /^\d{2}$/, message: "Nhóm phải có 2 chữ số" }]}>
                         <Input />
                     </Form.Item>
-
+                    <Form.Item
+                        name="isPractice"
+                        label="Nhóm thực hành"
+                        valuePropName="checked" // Quan trọng: để Switch nhận giá trị true/false
+                        tooltip="Bật nếu nhóm này cần được xếp lịch thực hành và tạo tổ hợp."
+                    >
+                        <Switch />
+                    </Form.Item>
                     <Form.Item style={{ textAlign: 'right' }}>
                         <Space>
                             <Button onClick={handleCancel}>Hủy</Button>
