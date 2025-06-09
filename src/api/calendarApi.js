@@ -17,6 +17,12 @@ const calendarApi = {
         return axiosClient.get(url);
     },
 
+    // THÊM HÀM MỚI Ở ĐÂY
+    getWeeksForUpdate: (calendarId) => {
+        const url = `/calendarManagement/getWeekUpdate/${calendarId}`;
+        return axiosClient.get(url);
+    },
+
 
 
     // GET /calendarManagement/create

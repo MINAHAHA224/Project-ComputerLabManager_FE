@@ -48,6 +48,12 @@ const creditClassApi = {
     delete: (id) => {
         const url = `/creditClassManagement/delete/${id}`;
         return axiosClient.post(url);
+    },
+
+
+    getFullSchedules: () => {
+        const url = '/creditClassManagement/schedules';
+        return axiosClient.get(url);
     }
 };
 
