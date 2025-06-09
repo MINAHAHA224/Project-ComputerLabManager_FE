@@ -149,6 +149,7 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from '../hooks/useAuth';
 import './MainLayout.css';
+import { ScheduleOutlined } from '@ant-design/icons';
 
 const { Header, Content, Sider } = Layout;
 
@@ -174,6 +175,7 @@ const roleMenus = {
         { key: '/calendar', icon: <CalendarOutlined />, label: <Link to="/calendar">Xem Lịch Biểu</Link> }, // <<<--- THÊM VÀO
         // { key: '/user-management', icon: <TeamOutlined />, label: <Link to="/user-management">Quản lý Người dùng</Link> },
         { key: '/reports/calendar', icon: <BarChartOutlined />, label: <Link to="/reports/calendar">Báo cáo Lịch</Link> },
+        { key: '/teaching-schedules', icon: <ScheduleOutlined />, label: <Link to="/teaching-schedules">Lịch Giảng Dạy</Link> },
     ],
     CSVC: [
         { key: '/dashboard', icon: <HomeOutlined />, label: <Link to="/dashboard">Bảng điều khiển</Link> },
@@ -187,12 +189,14 @@ const roleMenus = {
         { key: '/calendar', icon: <CalendarOutlined />, label: <Link to="/calendar">Lịch thực hành</Link> },
         { key: '/my-requests', icon: <FileAddOutlined />, label: <Link to="/my-requests">Yêu cầu của tôi</Link> },
         { key: '/notifications', icon: <BellOutlined />, label: <Link to="/notifications">Thông báo</Link> },
+        { key: '/my-teaching-schedule', icon: <ScheduleOutlined />, label: <Link to="/my-teaching-schedule">Lịch Giảng Dạy Của Tôi</Link> },
     ],
     TK: [
         { key: '/dashboard', icon: <HomeOutlined />, label: <Link to="/dashboard">Bảng điều khiển</Link> },
         { key: '/request-management', icon: <FileDoneOutlined />, label: <Link to="/request-management">Quản lý Yêu cầu</Link> },
         { key: '/calendar', icon: <CalendarOutlined />, label: <Link to="/calendar">Xem Lịch Biểu</Link> },
         { key: '/reports/calendar', icon: <BarChartOutlined />, label: <Link to="/reports/calendar">Báo cáo Lịch</Link> },
+        { key: '/teaching-schedules', icon: <ScheduleOutlined />, label: <Link to="/teaching-schedules">Lịch Giảng Dạy</Link> },
     ],
 };
 

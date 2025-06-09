@@ -23,6 +23,7 @@ import Notifications from '../pages/Notifications/Notifications';
 import Profile from '../pages/Profile/Profile';
 import CalendarReport from '../pages/Reports/CalendarReport';
 import RoomReport from '../pages/Reports/RoomReport';
+import TeachingSchedule from '../pages/TeachingSchedule/TeachingSchedule';
 // Role-specific page placeholders (sẽ xây dựng chi tiết sau)
 
 const AppRoutes = () => {
@@ -61,11 +62,13 @@ const AppRoutes = () => {
                 {/* Routes cho Báo cáo */}
                 <Route element={<ProtectedRoute allowedRoles={['GVU', 'TK']} />}>
                     <Route path="/reports/calendar" element={<CalendarReport />} />
+                    <Route path="/teaching-schedules" element={<TeachingSchedule />} />
                 </Route>
                 {/* Routes cho GV */}
                 <Route element={<ProtectedRoute allowedRoles={['GV']} />}>
                     <Route path="/my-requests" element={<MyRequests />} />
                     <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/my-teaching-schedule" element={<TeachingSchedule />} />
                 </Route>
 
                 {/* Routes dùng chung cho nhiều vai trò quản lý */}
