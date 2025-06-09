@@ -8,9 +8,14 @@ const TicketDetail = ({ ticket }) => {
 
     const renderStatus = (status) => {
         if (!status) return <Tag color="default">N/A</Tag>;
-        if (status.includes('APPROVED')) return <Tag color="success">{status}</Tag>;
-        if (status.includes('REJECTED')) return <Tag color="error">{status}</Tag>;
-        if (status.includes('PENDING')) return <Tag color="warning">{status}</Tag>;
+        if (status === "Đã duyệt") return <Tag color="success">{status}</Tag>;
+        if (status === "Từ chối") return <Tag color="error">{status}</Tag>;
+        if (status === "Chờ duyệt") return <Tag color="warning">{status}</Tag>;
+        if (status === "Không yêu cầu duyệt") return <Tag color="default">{status}</Tag>;
+        if (status === "Chờ Trưởng Khoa duyệt") return <Tag color="warning">{status}</Tag>;
+        if (status === "Chờ Giáo Vụ xử lý") return <Tag color="warning">{status}</Tag>;
+        if (status === "Chờ CSVC duyệt") return <Tag color="warning">{status}</Tag>;
+        if (status === "Đã xử lý thành công") return <Tag color="success">{status}</Tag>;
         return <Tag>{status}</Tag>;
     }
 
@@ -21,7 +26,9 @@ const TicketDetail = ({ ticket }) => {
                 <Descriptions.Item label="Loại yêu cầu">{ticket.typeRequest}</Descriptions.Item>
                 <Descriptions.Item label="Người gửi">{ticket.userRequest}</Descriptions.Item>
                 <Descriptions.Item label="Ngày gửi">{ticket.dateRequest}</Descriptions.Item>
-                <Descriptions.Item label="Trạng thái chung">{renderStatus(ticket.statusOverall)}</Descriptions.Item>
+                <Descriptions.Item label="Trạng thái chung">
+                    <>{renderStatus(ticket.statusOverall)}</>
+                </Descriptions.Item>
             </Descriptions>
 
             <Row gutter={24}>
@@ -57,14 +64,30 @@ const TicketDetail = ({ ticket }) => {
 
             <Title level={5} style={{marginTop: 24}}>Lịch sử duyệt</Title>
             <Descriptions bordered column={1} size="small">
+                {/*<Descriptions.Item label="Trưởng khoa">*/}
+                {/*    {ticket.doneTK === "Đã duyệt" ? `${renderStatus(ticket.doneTK)} bởi ${ticket.modified_TK} lúc ${ticket.created_TK}` : 'Chưa xử lý'}*/}
+                {/*</Descriptions.Item>*/}
                 <Descriptions.Item label="Trưởng khoa">
-                    {ticket.doneTK ? `${renderStatus(ticket.doneTK)} bởi ${ticket.modified_TK} lúc ${ticket.created_TK}` : 'Chưa xử lý'}
+                    {ticket.doneTK === "Đã duyệt" ? (
+                        <>
+                            {renderStatus(ticket.doneTK)} bởi {ticket.modified_TK} lúc {ticket.created_TK}
+                        </>
+                    ) : <>  {renderStatus(ticket.doneTK)} </>}
                 </Descriptions.Item>
                 <Descriptions.Item label="Giáo vụ">
-                    {ticket.doneGVU ? `${renderStatus(ticket.doneGVU)} bởi ${ticket.modified_GVU} lúc ${ticket.created_GVU}` : 'Chưa xử lý'}
+                    {ticket.doneGVU === "Đã duyệt" ? (
+                        <>
+                            {renderStatus(ticket.doneGVU)} bởi {ticket.modified_GVU} lúc {ticket.created_GVU}
+                        </>
+                    ) : <>  {renderStatus(ticket.doneGVU)} </>}
                 </Descriptions.Item>
+
                 <Descriptions.Item label="CSVC">
-                    {ticket.doneCSVC ? `${renderStatus(ticket.doneCSVC)} bởi ${ticket.modified_CSVC} lúc ${ticket.created_CSVC}` : 'Chưa xử lý'}
+                    {ticket.doneCSVC === "Đã duyệt" ? (
+                        <>
+                            {renderStatus(ticket.doneCSVC)} bởi {ticket.modified_CSVC} lúc {ticket.created_CSVC}
+                        </>
+                    ) : <>  {renderStatus(ticket.doneCSVC)} </>}
                 </Descriptions.Item>
             </Descriptions>
         </div>

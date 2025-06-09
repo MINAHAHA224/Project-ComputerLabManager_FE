@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Modal, message, Popconfirm, Card, Typography, Tag } from 'antd';
+import {Table, Button, Space, Modal, message, Popconfirm, Card, Typography, Tag, App} from 'antd';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import requestApi from '../../api/requestApi';
 import TicketDetail from '../../components/specific/TicketDetail'; // Component xem chi tiết
@@ -11,7 +11,8 @@ const MyRequests = () => {
     const [loading, setLoading] = useState(false);
     const [isDetailVisible, setIsDetailVisible] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
-
+    const { message } = App.useApp();
+    const DURATION = 5;
     const fetchRequests = async () => {
         setLoading(true);
         try {
@@ -31,10 +32,11 @@ const MyRequests = () => {
     const showDetailModal = async (id) => {
         try {
             const response = await requestApi.getMyRequestById(id);
+            console.log("showDetailModal " ,response.data )
             setSelectedTicket(response.data);
             setIsDetailVisible(true);
         } catch (error) {
-            message.error("Lỗi khi lấy chi tiết yêu cầu!");
+            message.error("Lỗi khi lấy chi tiết yêu cầu!" ,DURATION);
         }
     };
 
@@ -44,17 +46,24 @@ const MyRequests = () => {
             message.success('Hủy yêu cầu thành công!');
             fetchRequests();
         } catch (error) {
-            message.error(error.message || 'Hủy yêu cầu thất bại!');
+            message.error(error.message || 'Hủy yêu cầu thất bại!' ,DURATION);
         }
     };
 
+    const STATUS_MAP = {
+        WAITING_DEAN_APPROVAL: { label: "Chờ Trưởng Khoa duyệt", color: "gold" },
+        WAITING_REGISTRAR_PROCESSING: { label: "Chờ Giáo Vụ xử lý", color: "gold" },
+        WAITING_FACILITIES_APPROVAL: { label: "Chờ CSVC duyệt", color: "gold" },
+        PROCESSED_SUCCESSFULLY: { label: "Đã xử lý thành công", color: "green" },
+    };
+
     const getStatusTag = (status) => {
-        let color = 'geekblue';
-        if (status?.includes('REJECTED') || status?.includes('FAILED')) color = 'volcano';
-        if (status?.includes('APPROVED') || status?.includes('SUCCESSFULLY')) color = 'green';
-        if (status?.includes('WAITING') || status?.includes('PENDING')) color = 'gold';
-        return <Tag color={color}>{status}</Tag>;
-    }
+        const statusInfo = STATUS_MAP[status];
+        if (statusInfo) {
+            return <Tag color={statusInfo.color}>{statusInfo.label}</Tag>;
+        }
+        return <Tag color="geekblue">{status}</Tag>;
+    };
 
     const columns = [
         { title: 'ID', dataIndex: 'requestTicketId', key: 'requestTicketId' },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Modal, Form, Select, Input, InputNumber, message, Card, Typography } from 'antd';
+import {Table, Button, Space, Modal, Form, Select, Input, InputNumber, message, Card, Typography, App} from 'antd';
 import { EditOutlined, SwapOutlined } from '@ant-design/icons';
 import calendarApi from '../../api/calendarApi';
 import requestApi from '../../api/requestApi';
@@ -13,71 +13,93 @@ const CalendarView = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalType, setModalType] = useState(''); // 'change-schedule' hoặc 'change-room'
     const [currentCalendar, setCurrentCalendar] = useState(null);
-    const [modalData, setModalData] = useState(null); // Dữ liệu cho form trong modal
+    const { message } = App.useApp();
+    const DURATION = 5;
+    // State cho dữ liệu dropdowns tĩnh
+    const [formOptions, setFormOptions] = useState({ day: [], practiceCase: [] });
+    // State cho dropdown Tuần học (động)
+    const [weeksForEdit, setWeeksForEdit] = useState([]);
     const [form] = Form.useForm();
 
     const fetchSchedules = async () => {
         setLoading(true);
         try {
-            // API /calendar trả về lịch của người dùng hiện tại
             const response = await calendarApi.getForUser();
             setSchedules(response.data || []);
         } catch (error) {
-            message.error('Lỗi khi tải lịch thực hành!');
+            message.error('Lỗi khi tải lịch thực hành!', DURATION);
         } finally {
             setLoading(false);
         }
     };
 
+    // Hàm riêng để lấy dữ liệu tĩnh cho các form
+    const fetchFormOptions = async () => {
+        try {
+            const response = await requestApi.getDataForRentRoom(); // Tái sử dụng API này để lấy Day và PracticeCase
+            if (response.data) {
+                setFormOptions({
+                    day: response.data.day || [],
+                    practiceCase: response.data.practiceCase || []
+                });
+            }
+        } catch(e) {
+            message.error("Lỗi khi tải dữ liệu form!", DURATION);
+        }
+    }
+
     useEffect(() => {
         fetchSchedules();
+        fetchFormOptions(); // Gọi hàm lấy dữ liệu tĩnh
     }, []);
 
     const handleOpenModal = async (type, record) => {
         setModalType(type);
         setCurrentCalendar(record);
         form.resetFields();
+        setWeeksForEdit([]); // Reset danh sách tuần cũ
 
-        try {
-            let response;
-            if (type === 'change-schedule') {
-                response = await requestApi.getDataForChangeCalendar(record.calendarId);
-            } else { // 'change-room'
-                response = await requestApi.getDataForChangeRoom(record.calendarId);
+        // Chỉ gọi API lấy tuần khi là "Đổi lịch"
+        if (type === 'change-schedule') {
+            try {
+                const weeksResponse = await calendarApi.getWeeksForUpdate(record.calendarId);
+                setWeeksForEdit(weeksResponse.data || []);
+            } catch(error) {
+                message.error("Lỗi khi tải danh sách tuần hợp lệ!", DURATION);
             }
-            setModalData(response.data);
-            setIsModalVisible(true);
-        } catch(error) {
-            message.error("Lỗi khi lấy dữ liệu để tạo yêu cầu!");
         }
+
+        // Luôn mở modal dù có lỗi tải tuần hay không
+        setIsModalVisible(true);
     };
 
     const handleCancel = () => {
         setIsModalVisible(false);
         setCurrentCalendar(null);
-        setModalData(null);
     };
 
     const handleSubmitRequest = async (values) => {
         try {
+            let responseMessage = '';
             if (modalType === 'change-schedule') {
                 const payload = {
                     calendarIdToChange: currentCalendar.calendarId,
                     ...values
                 };
-                await requestApi.createChangeCalendarRequest(payload);
-                message.success('Đã gửi yêu cầu thay đổi lịch thành công!');
+                const res = await requestApi.createChangeCalendarRequest(payload);
+                responseMessage = res.message;
             } else { // 'change-room'
                 const payload = {
                     calendarId: currentCalendar.calendarId,
-                    ...values
+                    purposeUse: values.purposeUse // Chỉ cần lý do
                 };
-                await requestApi.createChangeRoomRequest(payload);
-                message.success('Đã gửi yêu cầu thay đổi phòng thành công!');
+                const res = await requestApi.createChangeRoomRequest(payload);
+                responseMessage = res.message;
             }
+            message.success(responseMessage || 'Đã gửi yêu cầu thành công!', DURATION);
             handleCancel();
         } catch (error) {
-            message.error(error.message || "Gửi yêu cầu thất bại!");
+            message.error(error.message || "Gửi yêu cầu thất bại!", DURATION);
         }
     };
 
@@ -108,7 +130,6 @@ const CalendarView = () => {
     return (
         <Card>
             <Title level={3}>Lịch thực hành của tôi</Title>
-            {/* Nút mượn phòng có thể đặt ở đây hoặc trang riêng */}
             <Table columns={columns} dataSource={schedules} loading={loading} rowKey="calendarId" bordered />
 
             <Modal
@@ -116,39 +137,44 @@ const CalendarView = () => {
                 open={isModalVisible}
                 onCancel={handleCancel}
                 footer={null}
+                destroyOnClose // Reset form state khi đóng
             >
-                {modalData && (
-                    <Form form={form} layout="vertical" onFinish={handleSubmitRequest}>
-                        {modalType === 'change-schedule' && (
-                            <>
-                                <Form.Item name="newWeekSemesterId" label="Tuần học mới" rules={[{ required: true }]}>
-                                    <Select placeholder="Chọn tuần">
-                                        {modalData.dataBase.weekSemester?.map(w => <Option key={w.idWeekSemester} value={Number(w.idWeekSemester)}>{w.time}</Option>)}
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item name="newDayId" label="Thứ mới" rules={[{ required: true }]}>
-                                    <Select placeholder="Chọn thứ">
-                                        {modalData.dataBase.day?.map(d => <Option key={d.idDay} value={Number(d.idDay)}>{d.name}</Option>)}
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item name="newPracticeCaseBeginId" label="Tiết bắt đầu mới" rules={[{ required: true }]}>
-                                    <Select placeholder="Chọn tiết">
-                                        {modalData.dataBase.practiceCase?.map(pc => <Option key={pc.idPracticeCase} value={Number(pc.idPracticeCase)}>{pc.name}</Option>)}
-                                    </Select>
-                                </Form.Item>
-                            </>
-                        )}
-                        <Form.Item name={modalType === 'change-schedule' ? 'newPurposeUse' : 'purposeUse'} label="Lý do / Ghi chú" rules={[{ required: true }]}>
-                            <Input.TextArea />
-                        </Form.Item>
-                        <Form.Item style={{ textAlign: 'right' }}>
-                            <Space>
-                                <Button onClick={handleCancel}>Hủy</Button>
-                                <Button type="primary" htmlType="submit">Gửi yêu cầu</Button>
-                            </Space>
-                        </Form.Item>
-                    </Form>
-                )}
+                <Form form={form} layout="vertical" onFinish={handleSubmitRequest}>
+                    {modalType === 'change-schedule' ? (
+                        <>
+                            <Form.Item name="newWeekSemesterId" label="Tuần học mới" rules={[{ required: true }]}>
+                                <Select placeholder="Chọn tuần học" disabled={weeksForEdit.length === 0}>
+                                    {weeksForEdit.map(w => <Option key={w.idWeekTime} value={Number(w.idWeekTime)}>{w.time}</Option>)}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item name="newDayId" label="Thứ mới" rules={[{ required: true }]}>
+                                <Select placeholder="Chọn thứ">
+                                    {formOptions.day.map(d => <Option key={d.idDay} value={Number(d.idDay)}>{d.name}</Option>)}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item name="newPracticeCaseBeginId" label="Tiết bắt đầu mới" rules={[{ required: true }]}>
+                                <Select placeholder="Chọn tiết">
+                                    {formOptions.practiceCase.map(pc => <Option key={pc.idPracticeCase} value={Number(pc.idPracticeCase)}>{pc.name}</Option>)}
+                                </Select>
+                            </Form.Item>
+                        </>
+                    ) : null}
+
+                    <Form.Item
+                        name={modalType === 'change-schedule' ? 'newPurposeUse' : 'purposeUse'}
+                        label="Lý do / Ghi chú"
+                        rules={[{ required: true, message: 'Vui lòng nhập lý do!' }]}
+                    >
+                        <Input.TextArea rows={3} />
+                    </Form.Item>
+
+                    <Form.Item style={{ textAlign: 'right', marginTop: '16px' }}>
+                        <Space>
+                            <Button onClick={handleCancel}>Hủy</Button>
+                            <Button type="primary" htmlType="submit">Gửi yêu cầu</Button>
+                        </Space>
+                    </Form.Item>
+                </Form>
             </Modal>
         </Card>
     );
