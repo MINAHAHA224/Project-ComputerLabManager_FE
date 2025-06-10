@@ -214,6 +214,9 @@ const MainLayout = () => {
         logout();
         navigate('/login');
     };
+    const avatarUrl = user && user.avatar
+        ? `http://localhost:8080/avatars/${user.avatar}`
+        : null; // hoặc một ảnh mặc định
 
     const userMenu = (
         <Menu>
@@ -244,7 +247,7 @@ const MainLayout = () => {
                     <Dropdown overlay={userMenu} trigger={['click']}>
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                <Avatar icon={<UserOutlined />} />
+                                <Avatar icon={<UserOutlined />} src={avatarUrl} />
                                 <span>{user ? user.userName : 'User'}</span>
                             </Space>
                         </a>

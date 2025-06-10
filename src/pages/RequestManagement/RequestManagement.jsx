@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Modal, Form, Input, Select, message, Card, Typography } from 'antd';
+import {Table, Button, Space, Modal, Form, Input, Select, message, Card, Typography, Tag , App} from 'antd';
 import { EyeOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import requestApi from '../../api/requestApi';
 import { useAuth } from '../../hooks/useAuth';
@@ -17,6 +17,28 @@ const RequestManagement = () => {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [selectedTicketDetail, setSelectedTicketDetail] = useState(null);
     const [form] = Form.useForm();
+    const { message } = App.useApp();
+    const DURATION = 5;
+
+    const STATUS_MAP = {
+        WAITING_DEAN_APPROVAL: { label: "Chờ Trưởng Khoa duyệt", color: "warning" },
+        WAITING_REGISTRAR_PROCESSING: { label: "Chờ Giáo Vụ xử lý", color: "warning" },
+        WAITING_FACILITIES_APPROVAL: { label: "Chờ CSVC duyệt", color: "warning" },
+        PROCESSED_SUCCESSFULLY: { label: "Đã xử lý thành công", color: "success" },
+        NOT_REQUIRED: { label: "Không yêu cầu duyệt", color: "default" },
+        PENDING_APPROVAL: { label: "Chờ duyệt", color: "warning" },
+        APPROVED: { label: "Đã duyệt", color: "success" },
+        REJECTED: { label: "Từ chối", color: "error" },
+    };
+
+    const getStatusTag = (status) => {
+        const statusInfo = STATUS_MAP[status];
+        if (statusInfo) {
+            return <Tag color={statusInfo.color}>{statusInfo.label}</Tag>;
+        }
+        return <Tag color="geekblue">{status}</Tag>;
+    };
+
 
     const fetchRequests = async () => {
         setLoading(true);
@@ -37,10 +59,11 @@ const RequestManagement = () => {
     const showDetailModal = async (record) => {
         try {
             const response = await requestApi.getRequestByIdForManager(record.requestId);
+            console.log("showDetailModal" ,response.data )
             setSelectedTicketDetail(response.data);
             setIsDetailVisible(true);
         } catch (error) {
-            message.error("Lỗi khi lấy chi tiết yêu cầu!");
+            message.error("Lỗi khi lấy chi tiết yêu cầu!" , DURATION);
         }
     };
 
@@ -82,7 +105,7 @@ const RequestManagement = () => {
             setIsApprovalVisible(false);
             fetchRequests(); // Tải lại danh sách
         } catch (error) {
-            message.error(error.message || "Xử lý yêu cầu thất bại!");
+            message.error(error.message || "Xử lý yêu cầu thất bại!" , DURATION);
         }
     };
 
@@ -91,7 +114,7 @@ const RequestManagement = () => {
         { title: 'Loại yêu cầu', dataIndex: 'typeRequestName', key: 'typeRequestName' },
         { title: 'Người gửi', dataIndex: 'userRequest', key: 'userRequest' },
         { title: 'Ngày gửi', dataIndex: 'dateRequest', key: 'dateRequest' },
-        { title: 'Trạng thái', dataIndex: 'statusName', key: 'statusName' },
+        { title: 'Trạng thái', dataIndex: 'statusName', render: getStatusTag  },
         {
             title: 'Hành động',
             key: 'action',

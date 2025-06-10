@@ -51,10 +51,14 @@ const MyRequests = () => {
     };
 
     const STATUS_MAP = {
-        WAITING_DEAN_APPROVAL: { label: "Chờ Trưởng Khoa duyệt", color: "gold" },
-        WAITING_REGISTRAR_PROCESSING: { label: "Chờ Giáo Vụ xử lý", color: "gold" },
-        WAITING_FACILITIES_APPROVAL: { label: "Chờ CSVC duyệt", color: "gold" },
-        PROCESSED_SUCCESSFULLY: { label: "Đã xử lý thành công", color: "green" },
+        WAITING_DEAN_APPROVAL: { label: "Chờ Trưởng Khoa duyệt", color: "warning" },
+        WAITING_REGISTRAR_PROCESSING: { label: "Chờ Giáo Vụ xử lý", color: "warning" },
+        WAITING_FACILITIES_APPROVAL: { label: "Chờ CSVC duyệt", color: "warning" },
+        PROCESSED_SUCCESSFULLY: { label: "Đã xử lý thành công", color: "success" },
+        NOT_REQUIRED: { label: "Không yêu cầu duyệt", color: "default" },
+        PENDING_APPROVAL: { label: "Chờ duyệt", color: "warning" },
+        APPROVED: { label: "Đã duyệt", color: "success" },
+        REJECTED: { label: "Từ chối", color: "error" },
     };
 
     const getStatusTag = (status) => {

@@ -6,18 +6,26 @@ const { Title } = Typography;
 const TicketDetail = ({ ticket }) => {
     if (!ticket) return null;
 
+
+    const STATUS_MAP = {
+        WAITING_DEAN_APPROVAL: { label: "Chờ Trưởng Khoa duyệt", color: "warning" },
+        WAITING_REGISTRAR_PROCESSING: { label: "Chờ Giáo Vụ xử lý", color: "warning" },
+        WAITING_FACILITIES_APPROVAL: { label: "Chờ CSVC duyệt", color: "warning" },
+        PROCESSED_SUCCESSFULLY: { label: "Đã xử lý thành công", color: "success" },
+        NOT_REQUIRED: { label: "Không yêu cầu duyệt", color: "default" },
+        PENDING_APPROVAL: { label: "Chờ duyệt", color: "warning" },
+        APPROVED: { label: "Đã duyệt", color: "success" },
+        REJECTED: { label: "Từ chối", color: "error" },
+    };
+
     const renderStatus = (status) => {
-        if (!status) return <Tag color="default">N/A</Tag>;
-        if (status === "Đã duyệt") return <Tag color="success">{status}</Tag>;
-        if (status === "Từ chối") return <Tag color="error">{status}</Tag>;
-        if (status === "Chờ duyệt") return <Tag color="warning">{status}</Tag>;
-        if (status === "Không yêu cầu duyệt") return <Tag color="default">{status}</Tag>;
-        if (status === "Chờ Trưởng Khoa duyệt") return <Tag color="warning">{status}</Tag>;
-        if (status === "Chờ Giáo Vụ xử lý") return <Tag color="warning">{status}</Tag>;
-        if (status === "Chờ CSVC duyệt") return <Tag color="warning">{status}</Tag>;
-        if (status === "Đã xử lý thành công") return <Tag color="success">{status}</Tag>;
-        return <Tag>{status}</Tag>;
-    }
+        const statusInfo = STATUS_MAP[status];
+        if (statusInfo) {
+            return <Tag color={statusInfo.color}>{statusInfo.label}</Tag>;
+        }
+        return <Tag color="geekblue">{status}</Tag>;
+    };
+   
 
     return (
         <div>

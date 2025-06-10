@@ -24,6 +24,7 @@ import Profile from '../pages/Profile/Profile';
 import CalendarReport from '../pages/Reports/CalendarReport';
 import RoomReport from '../pages/Reports/RoomReport';
 import TeachingSchedule from '../pages/TeachingSchedule/TeachingSchedule';
+import ForgotPassword from "../pages/Auth/ForgotPassword.jsx";
 // Role-specific page placeholders (sẽ xây dựng chi tiết sau)
 
 const AppRoutes = () => {
@@ -34,7 +35,7 @@ const AppRoutes = () => {
             {/* Routes không cần xác thực */}
             <Route element={<AuthLayout />}>
                 <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
-                {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+                 <Route path="/forgot-password" element={<ForgotPassword />} />
             </Route>
 
             {/* Routes cần xác thực */}
