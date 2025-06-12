@@ -101,6 +101,7 @@ export const AuthProvider = ({ children }) => {
         if (localStorage.getItem('authToken')) { // Luôn kiểm tra localStorage
             try {
                 const response = await axiosClient.get('/home');
+
                 if (response && response.data && response.data.dataUser) {
                     setUser(response.data.dataUser);
                     setIsAuthenticated(true);

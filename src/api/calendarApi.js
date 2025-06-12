@@ -37,6 +37,12 @@ const calendarApi = {
         return axiosClient.get(url);
     },
 
+  // GET /calendarManagement/{semesterYear}
+  getWeekStudyForCalendar: (semesterYear) => {
+    const url = `/calendarGetSemester/${semesterYear}`;
+    return axiosClient.get(url);
+  },
+
     // POST /calendarManagement/createAuto
     createAuto: (data) => {
         const url = '/calendarManagement/createAuto';

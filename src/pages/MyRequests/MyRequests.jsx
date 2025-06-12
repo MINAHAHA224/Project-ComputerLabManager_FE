@@ -19,7 +19,7 @@ const MyRequests = () => {
             const response = await requestApi.getMyRequests();
             setRequests(response.data || []);
         } catch (error) {
-            message.error('Lỗi khi tải danh sách yêu cầu!');
+            message.error('Lỗi khi tải danh sách yêu cầu!' , DURATION);
         } finally {
             setLoading(false);
         }
