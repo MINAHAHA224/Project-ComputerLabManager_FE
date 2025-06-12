@@ -463,8 +463,8 @@ const CalendarView = () => {
         <Modal title="Thực hiện Tác vụ" open={isActionModalVisible} onCancel={handleModalClose} footer={null} destroyOnClose width={600}>
           {selectedSchedule && (
             <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab={<><EditOutlined /> Đổi Lịch</>} key="1"><ChangeScheduleForm type="change-schedule" schedule={selectedSchedule} onCancel={handleModalClose} onSuccess={() => { handleModalClose(); fetchSchedules(); }} /></Tabs.TabPane>
-              <Tabs.TabPane tab={<><SwapOutlined /> Đổi Phòng</>} key="2"><ChangeScheduleForm type="change-room" schedule={selectedSchedule} onCancel={handleModalClose} onSuccess={() => { handleModalClose(); fetchSchedules(); }} /></Tabs.TabPane>
+              <Tabs.TabPane tab={<><EditOutlined /> Đổi Lịch</>} key="1"><ChangeScheduleForm type="change-schedule" schedule={selectedSchedule} onCancel={handleModalClose} onSuccess={() => { handleModalClose(); fetchInitialData(); }} /></Tabs.TabPane>
+              <Tabs.TabPane tab={<><SwapOutlined /> Đổi Phòng</>} key="2"><ChangeScheduleForm type="change-room" schedule={selectedSchedule} onCancel={handleModalClose} onSuccess={() => { handleModalClose(); fetchInitialData(); }} /></Tabs.TabPane>
             </Tabs>
           )}
         </Modal>

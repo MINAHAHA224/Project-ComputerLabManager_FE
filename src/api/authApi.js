@@ -12,7 +12,13 @@ const authApi = {
 
     logout: () => {
         return axiosClient.post('/access/logout');
-    }
+    },
+
+  // API Mới
+    faceLogin: (userCode) => {
+    // Gửi request POST với userCode trong params
+    return axiosClient.post(`/access/face-login?userCode=${userCode}`);
+  }
 };
 
 export default authApi;
