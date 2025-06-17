@@ -1,3 +1,5 @@
+// src/pages/Profile/Profile.jsx
+
 import React, { useState, useEffect } from 'react';
 import {
     Card,
@@ -166,6 +168,7 @@ const Profile = () => {
                         <Descriptions.Item label="Giới tính">{profile.gender === 'NAM' ? 'Nam' : 'Nữ'}</Descriptions.Item>
                         <Descriptions.Item label="Ngày sinh">{profile.dateOfBirth}</Descriptions.Item>
                         <Descriptions.Item label="Chuyên ngành">{profile.major}</Descriptions.Item>
+                      <Descriptions.Item label="Khoa">{profile.khoa}</Descriptions.Item>
                         <Descriptions.Item label="CCCD/CMND">{profile.informationCode}</Descriptions.Item>
                         <Descriptions.Item label="Số điện thoại">{profile.phone}</Descriptions.Item>
                         <Descriptions.Item label="Vai trò">{authUser?.role}</Descriptions.Item>

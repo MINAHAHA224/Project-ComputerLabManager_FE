@@ -1,3 +1,5 @@
+// src/pages/Dashboard/Dashboard.jsx
+
 import React from 'react';
 import { Typography, Card } from 'antd';
 import { useAuth } from '../../hooks/useAuth';

@@ -1,3 +1,5 @@
+// src/pages/Auth/ForgotPassword.jsx
+
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, Spin, Alert, App } from 'antd';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';

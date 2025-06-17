@@ -1,3 +1,5 @@
+// src/pages/TeachingSchedule/TeachingSchedule.jsx
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Table, Card, Typography, Spin, message } from 'antd';
 import creditClassApi from '../../api/creditClassApi';

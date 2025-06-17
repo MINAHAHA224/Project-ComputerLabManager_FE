@@ -1,3 +1,5 @@
+// src/pages/Auth/Login.jsx
+
 import React, { useState } from 'react';
 import { Form, Input, Button, Checkbox, Typography, Spin, Alert, Card, Divider } from 'antd';
 import { MailOutlined, LockOutlined, CameraOutlined } from "@ant-design/icons";

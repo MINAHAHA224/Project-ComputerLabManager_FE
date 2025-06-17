@@ -1,3 +1,5 @@
+// src/components/specific/TicketDetail.jsx
+
 import React from 'react';
 import { Descriptions, Card, Row, Col, Typography, Tag } from 'antd';
 

@@ -1,3 +1,5 @@
+// src/RootApp.jsx
+
 import { useAuth } from './hooks/useAuth';
 import AppRoutes from './routes/AppRoutes'; // Chúng ta sẽ tạo file này ở phần sau
 import { Spin } from 'antd'; // Thêm Spin cho đẹp hơn

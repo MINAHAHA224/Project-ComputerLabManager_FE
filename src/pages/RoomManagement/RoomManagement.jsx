@@ -1,3 +1,5 @@
+// src/pages/RoomManagement/RoomManagement.jsx
+
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Space, Modal, Form, Input, InputNumber, Select, message, Popconfirm, Card, Typography, App } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';

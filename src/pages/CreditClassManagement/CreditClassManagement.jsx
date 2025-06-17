@@ -1,3 +1,5 @@
+// src/pages/CreditClassManagement/CreditClassManagement.jsx
+
 import React, { useState, useEffect } from 'react';
 import {
     Table,

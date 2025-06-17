@@ -1,3 +1,5 @@
+// src/pages/Notifications/Notifications.jsx
+
 import React, { useState, useEffect } from 'react';
 import { List, Button, Modal, message, Card, Typography, Checkbox, Space, Spin, Tag, Popconfirm } from 'antd';
 import { EyeOutlined, DeleteOutlined, MailOutlined, MailFilled } from '@ant-design/icons';

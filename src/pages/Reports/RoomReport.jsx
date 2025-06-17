@@ -1,27 +1,4 @@
-// import React from 'react';
-// import ReportPage from './ReportPage';
-// import reportApi from '../../api/reportApi';
-//
-// const roomColumns = [
-//     { title: 'ID Phòng', dataIndex: 'id', key: 'id' },
-//     { title: 'Tên phòng', dataIndex: 'nameRoom', key: 'nameRoom' },
-//     { title: 'Cơ sở', dataIndex: 'facility', key: 'facility' },
-//     { title: 'Tổng số máy', dataIndex: 'numberOfComputers', key: 'numberOfComputers' },
-//     { title: 'Số máy hoạt động', dataIndex: 'numberOfComputerActive', key: 'numberOfComputerActive' },
-// ];
-//
-// const RoomReport = () => {
-//     return (
-//         <ReportPage
-//             title="Báo cáo Phòng máy"
-//             columns={roomColumns}
-//             onPreview={reportApi.getRoomPreview}
-//             onDownload={reportApi.downloadRoomReport}
-//         />
-//     );
-// };
-//
-// export default RoomReport;
+// src/pages/Reports/RoomReport.jsx
 
 
 import React from 'react';
