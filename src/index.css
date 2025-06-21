@@ -33,3 +33,39 @@ code {
   font-size: 20px !important;     /* <<<--- Tăng kích thước icon */
   top: 18px !important;           /* Căn chỉnh lại vị trí icon cho phù hợp */
 }
+
+/* Thêm hiệu ứng chuyển động mượt mà cho màu nền của tất cả các ô trong body của bảng */
+.ant-table-tbody > tr > td {
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Định nghĩa màu nền đậm hơn khi hover vào một dòng trong bảng */
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: #d9f2fd !important; /* Màu xanh nhạt - bạn có thể đổi thành màu khác như #f0f0f0 (xám nhạt) */
+}
+
+
+/* Hiệu ứng chuyển động mượt mà cho màu nền */
+.ant-table-tbody > tr > td {
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Kiểu cho dòng có trạng thái "Đang hoạt động" - MÀU XANH DƯƠNG */
+.table-row-active td {
+  background-color: #e6f7ff !important; /* Xanh dương rất nhạt, thân thiện */
+}
+
+/* Kiểu cho dòng có trạng thái "Dừng hoạt động" - MÀU XÁM NHẠT */
+.table-row-inactive td {
+  background-color: #f5f5f5 !important; /* Xám rất nhạt, thể hiện trạng thái bị vô hiệu hóa */
+  color: #bfbfbf !important; /* Làm mờ chữ đi một chút cho đồng bộ */
+}
+
+/* Hiệu ứng hover đậm hơn cho các dòng đã được tô màu */
+.table-row-active:hover td {
+  background-color: #bae7ff !important; /* Xanh dương đậm hơn khi hover */
+}
+
+.table-row-inactive:hover td {
+  background-color: #e8e8e8 !important; /* Xám đậm hơn khi hover */
+}

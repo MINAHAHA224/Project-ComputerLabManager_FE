@@ -11,7 +11,7 @@ const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
 // Cập nhật props để nhận thêm bộ lọc tùy chỉnh
-const ReportPage = ({ title, columns, onPreview, onDownload, extraFilters }) => {
+const ReportPage = ({ title, columns, onPreview, onDownload, extraFilters, rowClassName }) => {
     const [filters, setFilters] = useState({});
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -118,6 +118,7 @@ const ReportPage = ({ title, columns, onPreview, onDownload, extraFilters }) => 
                 dataSource={data}
                 loading={loading}
                 bordered
+                rowClassName={rowClassName}
                 rowKey={(record, index) => record.id || record.calendarId || index}
                 scroll={{ x: true }}
             />
