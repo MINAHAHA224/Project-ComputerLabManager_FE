@@ -37,7 +37,7 @@ const AppRoutes = () => {
             {/* Routes không cần xác thực */}
             <Route element={<AuthLayout />}>
                 <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
-                 <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
             </Route>
 
             {/* Routes cần xác thực */}

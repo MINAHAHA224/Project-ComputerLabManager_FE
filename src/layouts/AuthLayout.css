@@ -1,19 +1,439 @@
-
 /*src/layouts/AuthLayout.css*/
 
 .auth-layout {
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f0f2f5; /* Màu nền nhẹ nhàng */
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* Header PTIT Style */
+.auth-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+    padding: 0;
+}
+
+.auth-header-content {
+    width: 100%;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+.auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.auth-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.auth-nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.auth-nav-item {
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.auth-nav-item:hover {
+    color: #dc2626;
+    background: rgba(220, 38, 38, 0.1);
+}
+
+/* Main Content */
 .auth-content {
     width: 100%;
-    max-width: 400px;
+    padding-top: 70px;
+    /* Space for fixed header */
+    min-height: 100vh;
+}
+
+/* Hero Section with Form */
+.auth-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+    overflow: hidden;
+}
+
+/* Background Pattern */
+.auth-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.auth-hero-content {
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 450px;
+    gap: 60px;
+    align-items: center;
+    z-index: 2;
+    position: relative;
+}
+
+.auth-hero-text {
+    color: white;
+}
+
+.auth-hero-title {
+    font-size: 48px !important;
+    font-weight: bold !important;
+    color: white !important;
+    margin-bottom: 24px !important;
+    line-height: 1.2 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.auth-hero-subtitle {
+    font-size: 20px !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    margin-bottom: 32px !important;
+    line-height: 1.5 !important;
+}
+
+.auth-hero-features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+}
+
+.auth-feature-icon {
+    color: #fef3c7;
+    font-size: 20px;
+}
+
+/* Form Container */
+.auth-form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
     padding: 40px;
-    background: #fff;
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 3;
+}
+
+.auth-form-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-form-title {
+    font-size: 28px !important;
+    font-weight: bold !important;
+    color: #111827 !important;
+    margin-bottom: 8px !important;
+}
+
+.auth-form-subtitle {
+    color: #6b7280 !important;
+    font-size: 16px !important;
+}
+
+/* News Section */
+.auth-news-section {
+    background: #f9fafb;
+    padding: 80px 0;
+}
+
+.auth-news-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.auth-news-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.auth-news-title {
+    font-size: 36px !important;
+    font-weight: bold !important;
+    color: #111827 !important;
+    margin-bottom: 16px !important;
+}
+
+.auth-news-subtitle {
+    font-size: 18px !important;
+    color: #6b7280 !important;
+}
+
+.auth-news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 32px;
+    margin-bottom: 48px;
+}
+
+.auth-news-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.auth-news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.auth-news-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 48px;
+    position: relative;
+}
+
+.auth-news-content {
+    padding: 24px;
+}
+
+.auth-news-date {
+    color: #dc2626;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.auth-news-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.auth-news-excerpt {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Stats Section */
+.auth-stats-section {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    padding: 80px 0;
+    color: white;
+}
+
+.auth-stats-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.auth-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 48px;
+}
+
+.auth-stat-item {
+    text-align: center;
+}
+
+.auth-stat-number {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.auth-stat-label {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.4;
+}
+
+/* Footer */
+.auth-footer {
+    background: #111827;
+    color: white;
+    padding: 60px 0 30px;
+}
+
+.auth-footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.auth-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 40px;
+}
+
+.auth-footer-section h3 {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.auth-footer-section p,
+.auth-footer-section a {
+    color: #d1d5db;
+    font-size: 14px;
+    line-height: 1.6;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.auth-footer-section a:hover {
+    color: #dc2626;
+}
+
+.auth-footer-bottom {
+    border-top: 1px solid #374151;
+    padding-top: 20px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .auth-hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .auth-hero-title {
+        font-size: 36px !important;
+    }
+
+    .auth-form-container {
+        padding: 24px;
+        margin: 0 16px;
+    }
+
+    .auth-news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .auth-nav {
+        display: none;
+    }
+}
+
+/* Custom Ant Design Overrides for Auth Forms */
+.auth-form-container .ant-input {
+    height: 48px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 2px solid #e5e7eb;
+    font-size: 16px;
+}
+
+.auth-form-container .ant-input:focus,
+.auth-form-container .ant-input-focused {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.auth-form-container .ant-btn-primary {
+    height: 48px;
+    background: #dc2626;
+    border-color: #dc2626;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.auth-form-container .ant-btn-primary:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}
+
+.auth-form-container .ant-btn-default {
+    height: 48px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.auth-form-container .ant-btn-default:hover {
+    border-color: #dc2626;
+    color: #dc2626;
+}
+
+.auth-form-container .ant-divider-horizontal {
+    margin: 24px 0;
+}
+
+.auth-form-container .ant-alert {
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.auth-form-container a {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.auth-form-container a:hover {
+    color: #b91c1c;
 }

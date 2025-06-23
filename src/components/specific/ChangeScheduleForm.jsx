@@ -1,7 +1,7 @@
 // src/components/specific/ChangeScheduleForm.jsx
 
 import React, { useState, useEffect } from 'react';
-import { Form, Select, Input, Button, message, Space, Tabs, Row, Col } from 'antd';
+import { Form, Select, Input, Button, message, Space, Tabs, Row, Col, Typography } from 'antd';
 import calendarApi from '../../api/calendarApi';
 import requestApi from '../../api/requestApi';
 
@@ -35,7 +35,7 @@ const ChangeScheduleForm = ({ schedule, onCancel, onSuccess }) => {
             practiceCase: response.data.practiceCase || []
           });
         }
-      } catch(e) {
+      } catch (e) {
         console.error("Lỗi tải form options", e);
       }
     };
@@ -89,7 +89,7 @@ const ChangeScheduleForm = ({ schedule, onCancel, onSuccess }) => {
           </Row>
         </Tabs.TabPane>
         <Tabs.TabPane tab="Yêu cầu Đổi phòng" key="2">
-          <p>Hệ thống sẽ tự động tìm một phòng khác trống vào cùng thời điểm với lịch hiện tại của bạn.</p>
+          <Typography.Text>Hệ thống sẽ tự động tìm một phòng khác trống vào cùng thời điểm với lịch hiện tại của bạn.</Typography.Text>
         </Tabs.TabPane>
       </Tabs>
       <Form.Item name="reason" label="Lý do" rules={[{ required: true, message: 'Vui lòng nhập lý do!' }]}>

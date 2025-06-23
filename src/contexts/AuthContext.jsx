@@ -1,9 +1,9 @@
 // src/contexts/AuthContext.jsx
 
-
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axiosClient from '../config/axiosClient';
-import {App} from "antd";
+import { App } from "antd";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const { message } = App.useApp();
     const DURATION = 3;
+
     // fetchUser bây giờ sẽ được tái sử dụng để làm mới dữ liệu
     const fetchUser = useCallback(async () => {
         // Không cần set loading ở đây để tránh màn hình bị giật khi refresh
@@ -53,19 +54,43 @@ export const AuthProvider = ({ children }) => {
         fetchUser(); // Gọi fetchUser ngay sau khi login
     };
 
-    const logout = () => {
-        // Gọi API logout của backend (không bắt buộc phải chờ, nhưng nên gọi)
-        // axiosClient.post('/access/logout').catch(err => console.error("API Logout failed", err ));
+    const logout = async () => {
+        console.log('🔄 Starting logout process...');
 
-            localStorage.removeItem('authToken');
-            setToken(null);
-            setUser(null);
-            setIsAuthenticated(false);
+        try {
+            // Gọi API logout của backend để invalidate token trên server
+            console.log('📡 Calling logout API...');
+            await axiosClient.post('/access/logout');
+            console.log('✅ Logout API call successful');
+        } catch (error) {
+            console.error("❌ API Logout failed", error);
+            // Vẫn tiếp tục logout phía client ngay cả khi API call thất bại
+        }
 
+        console.log('🧹 Clearing authentication data...');
 
+        // Clear tất cả dữ liệu authentication
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole'); // Clear user role nếu có
 
+        // Reset state
+        setToken(null);
+        setUser(null);
+        setIsAuthenticated(false);
 
+        console.log('✅ Authentication data cleared');
+
+        // Hiển thị message logout thành công
+        message.success('Đăng xuất thành công!', DURATION);
+
+        console.log('🔄 Redirecting to login...');
+
+        // Force reload để đảm bảo clear hết state
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 500); // Delay nhỏ để message hiển thị
     };
+
     // === HÀM MỚI ĐỂ CẬP NHẬT THÔNG TIN USER ===
     const refreshUserData = async () => {
         // Chỉ cần gọi lại hàm fetchUser là đủ

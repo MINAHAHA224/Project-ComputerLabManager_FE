@@ -1,19 +1,142 @@
 /*src/index.css*/
 
+/* Import font Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Root Variables */
+:root {
+  --primary-color: #dc2626;
+  --primary-hover: #b91c1c;
+  --primary-dark: #991b1b;
+  --secondary-color: #374151;
+  --text-color: #111827;
+  --text-muted: #6b7280;
+  --background: #ffffff;
+  --background-light: #f9fafb;
+  --border-color: #e5e7eb;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --radius: 8px;
+  --radius-lg: 16px;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
+  background: var(--background);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+    monospace;
 }
 
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Selection */
+::selection {
+  background: rgba(220, 38, 38, 0.2);
+  color: var(--primary-color);
+}
+
+/* Focus styles */
+*:focus {
+  outline: 2px solid rgba(220, 38, 38, 0.5);
+  outline-offset: 2px;
+}
+
+/* ======================================= */
+/*      CUSTOM ANT DESIGN OVERRIDES       */
+/* ======================================= */
+
+/* Primary button customization */
+.ant-btn-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Input customization */
+.ant-input {
+  border-radius: var(--radius);
+  border: 2px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.ant-input:hover {
+  border-color: var(--primary-color);
+}
+
+.ant-input:focus,
+.ant-input-focused {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Card customization */
+.ant-card {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+/* Typography customization */
+.ant-typography h1,
+.ant-typography h2,
+.ant-typography h3,
+.ant-typography h4,
+.ant-typography h5,
+.ant-typography h6 {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+/* Alert customization */
+.ant-alert-error {
+  border: 1px solid #fca5a5;
+  background: #fef2f2;
+}
+
+.ant-alert-success {
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+}
 
 /* ======================================= */
 /*      CUSTOM ANT DESIGN MESSAGE TOAST      */
@@ -21,51 +144,182 @@ code {
 
 /* Ghi đè class chung của Ant Design cho message */
 .ant-message-notice-content {
-  min-width: 400px !important; /* <<<--- Tăng chiều rộng tối thiểu */
-  padding: 16px 24px !important;   /* <<<--- Tăng padding bên trong */
-  font-size: 16px !important;     /* <<<--- Tăng kích thước chữ */
-  border-radius: 8px !important;  /* Bo góc cho mềm mại hơn */
-  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
+  min-width: 400px !important;
+  /* <<<--- Tăng chiều rộng tối thiểu */
+  padding: 16px 24px !important;
+  /* <<<--- Tăng padding bên trong */
+  font-size: 16px !important;
+  /* <<<--- Tăng kích thước chữ */
+  border-radius: var(--radius) !important;
+  /* Bo góc cho mềm mại hơn */
+  box-shadow: var(--shadow-lg) !important;
 }
 
 /* Tùy chỉnh icon bên trong toast */
 .ant-message-notice-content .anticon {
-  font-size: 20px !important;     /* <<<--- Tăng kích thước icon */
-  top: 18px !important;           /* Căn chỉnh lại vị trí icon cho phù hợp */
+  font-size: 20px !important;
+  /* <<<--- Tăng kích thước icon */
+  top: 18px !important;
+  /* Căn chỉnh lại vị trí icon cho phù hợp */
 }
 
+/* ======================================= */
+/*           TABLE CUSTOMIZATION          */
+/* ======================================= */
+
 /* Thêm hiệu ứng chuyển động mượt mà cho màu nền của tất cả các ô trong body của bảng */
-.ant-table-tbody > tr > td {
+.ant-table-tbody>tr>td {
   transition: background-color 0.2s ease-in-out;
 }
 
 /* Định nghĩa màu nền đậm hơn khi hover vào một dòng trong bảng */
-.ant-table-tbody > tr.ant-table-row:hover > td {
-  background: #d9f2fd !important; /* Màu xanh nhạt - bạn có thể đổi thành màu khác như #f0f0f0 (xám nhạt) */
-}
-
-
-/* Hiệu ứng chuyển động mượt mà cho màu nền */
-.ant-table-tbody > tr > td {
-  transition: background-color 0.2s ease-in-out;
+.ant-table-tbody>tr.ant-table-row:hover>td {
+  background: #d9f2fd !important;
+  /* Màu xanh nhạt - bạn có thể đổi thành màu khác như #f0f0f0 (xám nhạt) */
 }
 
 /* Kiểu cho dòng có trạng thái "Đang hoạt động" - MÀU XANH DƯƠNG */
 .table-row-active td {
-  background-color: #e6f7ff !important; /* Xanh dương rất nhạt, thân thiện */
+  background-color: #e6f7ff !important;
+  /* Xanh dương rất nhạt, thân thiện */
 }
 
 /* Kiểu cho dòng có trạng thái "Dừng hoạt động" - MÀU XÁM NHẠT */
 .table-row-inactive td {
-  background-color: #f5f5f5 !important; /* Xám rất nhạt, thể hiện trạng thái bị vô hiệu hóa */
-  color: #bfbfbf !important; /* Làm mờ chữ đi một chút cho đồng bộ */
+  background-color: #f5f5f5 !important;
+  /* Xám rất nhạt, thể hiện trạng thái bị vô hiệu hóa */
+  color: #bfbfbf !important;
+  /* Làm mờ chữ đi một chút cho đồng bộ */
 }
 
 /* Hiệu ứng hover đậm hơn cho các dòng đã được tô màu */
 .table-row-active:hover td {
-  background-color: #bae7ff !important; /* Xanh dương đậm hơn khi hover */
+  background-color: #bae7ff !important;
+  /* Xanh dương đậm hơn khi hover */
 }
 
 .table-row-inactive:hover td {
-  background-color: #e8e8e8 !important; /* Xám đậm hơn khi hover */
+  background-color: #e8e8e8 !important;
+  /* Xám đậm hơn khi hover */
+}
+
+/* ======================================= */
+/*          LOADING ANIMATION             */
+/* ======================================= */
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* ======================================= */
+/*          UTILITY CLASSES               */
+/* ======================================= */
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mb-1 {
+  margin-bottom: 8px !important;
+}
+
+.mb-2 {
+  margin-bottom: 16px !important;
+}
+
+.mb-3 {
+  margin-bottom: 24px !important;
+}
+
+.mb-4 {
+  margin-bottom: 32px !important;
+}
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mt-1 {
+  margin-top: 8px !important;
+}
+
+.mt-2 {
+  margin-top: 16px !important;
+}
+
+.mt-3 {
+  margin-top: 24px !important;
+}
+
+.mt-4 {
+  margin-top: 32px !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.p-1 {
+  padding: 8px !important;
+}
+
+.p-2 {
+  padding: 16px !important;
+}
+
+.p-3 {
+  padding: 24px !important;
+}
+
+.p-4 {
+  padding: 32px !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.shadow {
+  box-shadow: var(--shadow);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.rounded {
+  border-radius: var(--radius);
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+/* ======================================= */
+/*          RESPONSIVE UTILITIES          */
+/* ======================================= */
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .text-center-mobile {
+    text-align: center !important;
+  }
 }

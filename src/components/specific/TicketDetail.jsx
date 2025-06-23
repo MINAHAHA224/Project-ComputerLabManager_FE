@@ -27,7 +27,7 @@ const TicketDetail = ({ ticket }) => {
         }
         return <Tag color="geekblue">{status}</Tag>;
     };
-   
+
 
     return (
         <div>
@@ -53,7 +53,7 @@ const TicketDetail = ({ ticket }) => {
                                 <Descriptions.Item label="Phòng">{ticket.roomOld}</Descriptions.Item>
                                 <Descriptions.Item label="Ghi chú">{ticket.noteOld}</Descriptions.Item>
                             </Descriptions>
-                        ) : <p>Không có thông tin gốc (Yêu cầu mượn phòng mới).</p>}
+                        ) : <Typography.Text>Không có thông tin gốc (Yêu cầu mượn phòng mới).</Typography.Text>}
                     </Card>
                 </Col>
                 <Col span={12}>
@@ -67,12 +67,12 @@ const TicketDetail = ({ ticket }) => {
                                 <Descriptions.Item label="Phòng">{ticket.roomNew || '(Chờ xếp)'}</Descriptions.Item>
                                 <Descriptions.Item label="Lý do/Ghi chú mới">{ticket.noteNew}</Descriptions.Item>
                             </Descriptions>
-                        ) : <p>Không có thông tin đề xuất.</p>}
+                        ) : <Typography.Text>Không có thông tin đề xuất.</Typography.Text>}
                     </Card>
                 </Col>
             </Row>
 
-            <Title level={5} style={{marginTop: 24}}>Lịch sử duyệt</Title>
+            <Title level={5} style={{ marginTop: 24 }}>Lịch sử duyệt</Title>
             <Descriptions bordered column={1} size="small">
                 {/*<Descriptions.Item label="Trưởng khoa">*/}
                 {/*    {ticket.doneTK === "Đã duyệt" ? `${renderStatus(ticket.doneTK)} bởi ${ticket.modified_TK} lúc ${ticket.created_TK}` : 'Chưa xử lý'}*/}

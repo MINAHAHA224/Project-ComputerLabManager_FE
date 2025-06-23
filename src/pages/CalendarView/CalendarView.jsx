@@ -55,15 +55,15 @@ const ScheduleBlock = ({ schedule, onClick, userRole }) => {
   // === NỘI DUNG HIỂN THỊ TRONG TOOLTIP (MÀU ĐEN) ===
   const tooltipContent = (
     <div>
-      {schedule.codeSubject && <p><strong>Mã MH:</strong> {schedule.codeSubject}</p>}
-      <p><strong>Môn:</strong> {schedule.nameSubject || 'Lịch mượn phòng'}</p>
-      {schedule.group && <p><strong>Nhóm:</strong> {schedule.group.trim()}</p>}
-      {schedule.combination && <p><strong>Tổ:</strong> {schedule.combination.trim()}</p>}
-      <p><strong>Phòng:</strong> {schedule.nameRoom}</p>
-      <p><strong>Thứ {schedule.day} - Tiết {schedule.lessonBegin} - Số tiết: {schedule.lesson}</strong></p>
-      <p><strong>GV:</strong> {schedule.nameTeacher}</p>
-      {schedule.nameClassroom && <p><strong>Lớp:</strong> {schedule.nameClassroom}</p>}
-      <p><strong>Ngày:</strong> {schedule.date}</p>
+      {schedule.codeSubject && <Text><Text strong>Mã MH:</Text> {schedule.codeSubject}</Text>}
+      <Text><Text strong>Môn:</Text> {schedule.nameSubject || 'Lịch mượn phòng'}</Text>
+      {schedule.group && <Text><Text strong>Nhóm:</Text> {schedule.group.trim()}</Text>}
+      {schedule.combination && <Text><Text strong>Tổ:</Text> {schedule.combination.trim()}</Text>}
+      <Text><Text strong>Phòng:</Text> {schedule.nameRoom}</Text>
+      <Text><Text strong>Thứ {schedule.day} - Tiết {schedule.lessonBegin} - Số tiết: {schedule.lesson}</Text></Text>
+      <Text><Text strong>GV:</Text> {schedule.nameTeacher}</Text>
+      {schedule.nameClassroom && <Text><Text strong>Lớp:</Text> {schedule.nameClassroom}</Text>}
+      <Text><Text strong>Ngày:</Text> {schedule.date}</Text>
     </div>
   );
 
@@ -79,7 +79,7 @@ const ScheduleBlock = ({ schedule, onClick, userRole }) => {
           {schedule.nameSubject || 'Lịch Mượn Phòng'}
         </Text>
         <Text className="details" title={`Mã LTC: ${schedule.codeSubject || 'N/A'}`}>
-         ( {schedule.codeSubject || ''} )
+          ( {schedule.codeSubject || ''} )
         </Text>
         <Text className="details" title={`Nhóm: ${schedule.group?.trim() || 'N/A'}`}>
           Nhóm: {schedule.group?.trim()}
@@ -101,7 +101,7 @@ const ScheduleBlock = ({ schedule, onClick, userRole }) => {
 const CalendarView = () => {
   const { message } = App.useApp();
   const DURATION = 5;
-// === BƯỚC 2: LẤY THÔNG TIN VAI TRÒ ===
+  // === BƯỚC 2: LẤY THÔNG TIN VAI TRÒ ===
   const { user } = useAuth();
   const userRoleMapping = {
     'Nhân viên phòng Giáo Vụ': 'GVU',
@@ -126,8 +126,8 @@ const CalendarView = () => {
         calendarApi.getForUser(),
         calendarApi.getCreateData()
       ]);
-      console.log("test1",scheduleRes.data);
-      console.log("test2",createDataRes.data.semesterYear);
+      console.log("test1", scheduleRes.data);
+      console.log("test2", createDataRes.data.semesterYear);
 
       setAllSchedules(scheduleRes.data || []);
       setSemesters(createDataRes.data.semesterYear || []);
@@ -157,8 +157,8 @@ const CalendarView = () => {
   };
 
   // === LOGIC XỬ LÝ DỮ LIỆU SANG DẠNG LƯỚI ===
-// === LOGIC XỬ LÝ DỮ LIỆU SANG DẠNG LƯỚI (ĐÃ SỬA LỖI SO SÁNH NGÀY) ===
-// === LOGIC XỬ LÝ DỮ LIỆU SANG DẠNG LƯỚI (SỬA LỖI PHÂN TÍCH CHUỖI) ===
+  // === LOGIC XỬ LÝ DỮ LIỆU SANG DẠNG LƯỚI (ĐÃ SỬA LỖI SO SÁNH NGÀY) ===
+  // === LOGIC XỬ LÝ DỮ LIỆU SANG DẠNG LƯỚI (SỬA LỖI PHÂN TÍCH CHUỖI) ===
   const gridData = useMemo(() => {
     const grid = Array.from({ length: TOTAL_LESSONS }, () => Array(7).fill(null));
     if (!selectedWeekId || !allSchedules.length) return grid;
@@ -222,7 +222,7 @@ const CalendarView = () => {
     return grid;
   }, [allSchedules, selectedWeekId, weeks]);
   const handleScheduleClick = (schedule) => {
-    if(schedule.statusCalendar === 'OFF') {
+    if (schedule.statusCalendar === 'OFF') {
       message.warning("Không thể thao tác trên lịch đã nghỉ.");
       return;
     }
@@ -237,9 +237,9 @@ const CalendarView = () => {
 
   const handleNavigateWeek = (direction) => {
     const currentIndex = weeks.findIndex(w => w.idWeekTime === selectedWeekId);
-    if(currentIndex === -1) return;
+    if (currentIndex === -1) return;
     const newIndex = currentIndex + direction;
-    if(newIndex >= 0 && newIndex < weeks.length) {
+    if (newIndex >= 0 && newIndex < weeks.length) {
       setSelectedWeekId(weeks[newIndex].idWeekTime);
     }
   };
@@ -259,14 +259,14 @@ const CalendarView = () => {
       </div>
 
       <Spin spinning={loading}>
-        <Space style={{marginBottom: '10px', width: '100%', justifyContent: 'space-between'}}>
-          <Button icon={<LeftOutlined/>} onClick={() => handleNavigateWeek(-1)} disabled={!selectedWeekId || weeks.findIndex(w => w.idWeekTime === selectedWeekId) === 0}>Trước</Button>
+        <Space style={{ marginBottom: '10px', width: '100%', justifyContent: 'space-between' }}>
+          <Button icon={<LeftOutlined />} onClick={() => handleNavigateWeek(-1)} disabled={!selectedWeekId || weeks.findIndex(w => w.idWeekTime === selectedWeekId) === 0}>Trước</Button>
           <Typography.Text strong>{selectedWeekInfo}</Typography.Text>
-          <Button onClick={() => handleNavigateWeek(1)} disabled={!selectedWeekId || weeks.findIndex(w => w.idWeekTime === selectedWeekId) === weeks.length - 1}>Sau <RightOutlined/></Button>
+          <Button onClick={() => handleNavigateWeek(1)} disabled={!selectedWeekId || weeks.findIndex(w => w.idWeekTime === selectedWeekId) === weeks.length - 1}>Sau <RightOutlined /></Button>
         </Space>
         <table className="timetable">
           <thead><tr><th className="timetable-time-header">Tiết</th>{['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'].map(day => (<th key={day} className="timetable-day-header">{day}</th>))}</tr></thead>
-          <tbody>{gridData.map((row, rowIndex) => (<tr key={rowIndex}><td><div className="time-slot">Tiết {rowIndex + 1}</div></td>{row.map((cell, colIndex) => {if (cell?.spanned) return null; return (<td key={colIndex} rowSpan={cell?.rowspan || 1} className="timetable-cell">{cell && <ScheduleBlock schedule={cell} onClick={handleScheduleClick} userRole={currentUserRole} />}</td>);})}</tr>))}</tbody>
+          <tbody>{gridData.map((row, rowIndex) => (<tr key={rowIndex}><td><div className="time-slot">Tiết {rowIndex + 1}</div></td>{row.map((cell, colIndex) => { if (cell?.spanned) return null; return (<td key={colIndex} rowSpan={cell?.rowspan || 1} className="timetable-cell">{cell && <ScheduleBlock schedule={cell} onClick={handleScheduleClick} userRole={currentUserRole} />}</td>); })}</tr>))}</tbody>
         </table>
       </Spin>
       {currentUserRole === 'GV' && (
@@ -301,7 +301,7 @@ const ChangeScheduleForm = ({ type, schedule, onCancel, onSuccess }) => {
         }
         const optionsRes = await requestApi.getDataForRentRoom();
         setOptions({ day: optionsRes.data.day || [], practiceCase: optionsRes.data.practiceCase || [] });
-      } catch(e) {
+      } catch (e) {
         message.error("Lỗi khi tải dữ liệu cho form!", DURATION);
       }
     }

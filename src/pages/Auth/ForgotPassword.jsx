@@ -1,8 +1,8 @@
 // src/pages/Auth/ForgotPassword.jsx
 
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, Typography, Spin, Alert, App } from 'antd';
-import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Typography, Spin, Alert, App, Result } from 'antd';
+import { MailOutlined, ArrowLeftOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import axiosClient from '../../config/axiosClient';
 
@@ -37,45 +37,87 @@ const ForgotPassword = () => {
         }
     };
 
+    if (success) {
+        return (
+            <Result
+                icon={<CheckCircleOutlined style={{ color: '#dc2626' }} />}
+                title="Email đã được gửi!"
+                subTitle={success}
+                extra={[
+                    <Link to="/login" key="back">
+                        <Button type="primary" size="large">
+                            <ArrowLeftOutlined /> Quay lại Đăng nhập
+                        </Button>
+                    </Link>
+                ]}
+            />
+        );
+    }
+
     return (
-        <Card>
-            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-                <Title level={2}>Quên mật khẩu</Title>
-                <Paragraph>
+        <>
+            <div className="auth-form-header">
+                <Title className="auth-form-title">Quên mật khẩu</Title>
+                <Paragraph className="auth-form-subtitle">
                     Nhập email của bạn để nhận hướng dẫn đặt lại mật khẩu.
+                    Chúng tôi sẽ gửi cho bạn một liên kết để tạo mật khẩu mới.
                 </Paragraph>
             </div>
 
-            {success ? (
-                <Alert message={success} type="success" showIcon />
-            ) : (
-                <Form onFinish={onFinish}>
-                    <Form.Item
-                        name="email"
-                        rules={[
-                            { required: true, message: 'Vui lòng nhập Email!' },
-                            { type: 'email', message: 'Email không đúng định dạng!' },
-                        ]}
+            <Form
+                onFinish={onFinish}
+                layout="vertical"
+                size="large"
+            >
+                <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[
+                        { required: true, message: 'Vui lòng nhập Email!' },
+                        { type: 'email', message: 'Email không đúng định dạng!' },
+                    ]}
+                >
+                    <Input
+                        prefix={<MailOutlined style={{ color: '#dc2626' }} />}
+                        placeholder="Nhập địa chỉ email của bạn"
+                    />
+                </Form.Item>
+
+                {error && (
+                    <Alert
+                        message={error}
+                        type="error"
+                        showIcon
+                        style={{ marginBottom: '24px' }}
+                    />
+                )}
+
+                <Form.Item>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        style={{ width: '100%' }}
+                        loading={loading}
                     >
-                        <Input prefix={<MailOutlined />} placeholder="Email" />
-                    </Form.Item>
+                        {loading ? 'Đang gửi yêu cầu...' : 'Gửi yêu cầu đặt lại mật khẩu'}
+                    </Button>
+                </Form.Item>
 
-                    {error && <Alert message={error} type="error" showIcon style={{ marginBottom: '24px' }} />}
-
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={loading}>
-                            Gửi yêu cầu
-                        </Button>
-                    </Form.Item>
-                </Form>
-            )}
-
-            <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                <Link to="/login">
-                    <ArrowLeftOutlined /> Quay lại Đăng nhập
-                </Link>
-            </div>
-        </Card>
+                <div style={{ textAlign: 'center', marginTop: '24px' }}>
+                    <Link
+                        to="/login"
+                        style={{
+                            color: '#dc2626',
+                            fontWeight: 500,
+                            textDecoration: 'none'
+                        }}
+                    >
+                        <ArrowLeftOutlined style={{ marginRight: '8px' }} />
+                        Quay lại Đăng nhập
+                    </Link>
+                </div>
+            </Form>
+        </>
     );
 };
 

@@ -34,13 +34,20 @@ axiosClient.interceptors.response.use(
     (error) => {
         // Xử lý lỗi 401 (Unauthorized) - Token hết hạn hoặc không hợp lệ
         if (error.response && error.response.status === 401) {
+            console.error("Unauthorized! Token expired or invalid.");
+
             // Xóa token cũ và thông tin người dùng
             localStorage.removeItem('authToken');
-            localStorage.removeItem('userRole'); // Chúng ta sẽ thêm cái này sau
-            // Redirect về trang đăng nhập
-            // window.location.href = '/login'; // sẽ làm ở phần routing để mượt hơn
-            console.error("Unauthorized! Redirecting to login.");
+            localStorage.removeItem('userRole');
+
+            // Chỉ redirect nếu không phải đang ở trang login
+            if (!window.location.pathname.includes('/login')) {
+                // Hiển thị thông báo và redirect
+                console.log("Redirecting to login due to unauthorized access...");
+                window.location.href = '/login';
+            }
         }
+
         // Trả về một promise bị reject với thông tin lỗi
         return Promise.reject(error.response ? error.response.data : error);
     }
