@@ -119,6 +119,91 @@ const CalendarView = () => {
   const [isActionModalVisible, setIsActionModalVisible] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
 
+  // Hàm tìm kỳ học hiện tại dựa trên ngày hiện tại
+  const findCurrentSemester = (semesters) => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // getMonth() trả về 0-11
+
+    // Logic xác định kỳ học:
+    // Kỳ 1: Tháng 8-12 của năm hiện tại
+    // Kỳ 2: Tháng 1-6 của năm hiện tại  
+    // Kỳ 3: Tháng 7-8 của năm hiện tại
+    let targetSemester = '';
+
+    if (currentMonth >= 8 && currentMonth <= 12) {
+      // Kỳ 1 năm học hiện tại
+      targetSemester = `Kỳ 1 - ${currentYear}-${currentYear + 1}`;
+    } else if (currentMonth >= 1 && currentMonth <= 6) {
+      // Kỳ 2 năm học trước
+      targetSemester = `Kỳ 2 - ${currentYear - 1}-${currentYear}`;
+    } else if (currentMonth === 7) {
+      // Kỳ 3 năm học trước  
+      targetSemester = `Kỳ 3 - ${currentYear - 1}-${currentYear}`;
+    }
+
+    // Tìm kỳ học khớp với pattern
+    const matchedSemester = semesters.find(s =>
+      s.content.includes(targetSemester) ||
+      s.content.includes(`Kỳ 1 - ${currentYear}`) ||
+      s.content.includes(`Kỳ 2 - ${currentYear}`) ||
+      s.content.includes(`Kỳ 3 - ${currentYear}`)
+    );
+
+    // Nếu không tìm thấy, lấy kỳ học gần nhất
+    return matchedSemester || semesters[semesters.length - 1];
+  };
+
+  // Hàm tìm tuần học hiện tại dựa trên ngày hiện tại
+  const findCurrentWeek = (weeks) => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    // Helper function để parse ngày từ string dd-MM-yyyy
+    const parseDate = (dateString) => {
+      const [day, month, year] = dateString.split('-');
+      const date = new Date(year, month - 1, day);
+      date.setHours(0, 0, 0, 0);
+      return date;
+    };
+
+    // Tìm tuần chứa ngày hiện tại
+    for (const week of weeks) {
+      const dateRegex = /(\d{2}-\d{2}-\d{4})/g;
+      const datesFound = week.time.match(dateRegex);
+
+      if (datesFound && datesFound.length >= 2) {
+        const startDate = parseDate(datesFound[0]);
+        const endDate = parseDate(datesFound[1]);
+
+        if (now.getTime() >= startDate.getTime() && now.getTime() <= endDate.getTime()) {
+          return week;
+        }
+      }
+    }
+
+    // Nếu không tìm thấy tuần hiện tại, tìm tuần gần nhất
+    let closestWeek = null;
+    let minDiff = Infinity;
+
+    for (const week of weeks) {
+      const dateRegex = /(\d{2}-\d{2}-\d{4})/g;
+      const datesFound = week.time.match(dateRegex);
+
+      if (datesFound && datesFound.length >= 2) {
+        const startDate = parseDate(datesFound[0]);
+        const diff = Math.abs(now.getTime() - startDate.getTime());
+
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestWeek = week;
+        }
+      }
+    }
+
+    return closestWeek;
+  };
+
   const fetchInitialData = async () => {
     setLoading(true);
     try {
@@ -126,11 +211,34 @@ const CalendarView = () => {
         calendarApi.getForUser(),
         calendarApi.getCreateData()
       ]);
-      console.log("test1", scheduleRes.data);
-      console.log("test2", createDataRes.data.semesterYear);
 
       setAllSchedules(scheduleRes.data || []);
-      setSemesters(createDataRes.data.semesterYear || []);
+      const semesterList = createDataRes.data.semesterYear || [];
+      setSemesters(semesterList);
+
+      // Tự động chọn kỳ học hiện tại
+      if (semesterList.length > 0) {
+        const currentSemester = findCurrentSemester(semesterList);
+        if (currentSemester) {
+          setSelectedSemester(currentSemester.idSemesterYear);
+
+          // Tự động load tuần học và chọn tuần hiện tại
+          try {
+            const weekRes = await calendarApi.getWeekStudyForCalendar(currentSemester.idSemesterYear);
+            const weekList = weekRes.data || [];
+            setWeeks(weekList);
+
+            if (weekList.length > 0) {
+              const currentWeek = findCurrentWeek(weekList);
+              if (currentWeek) {
+                setSelectedWeekId(currentWeek.idWeekTime);
+              }
+            }
+          } catch (error) {
+            console.error("Lỗi khi tải tuần học:", error);
+          }
+        }
+      }
     } catch (error) {
       message.error("Lỗi khi tải dữ liệu ban đầu!", DURATION);
     } finally {
