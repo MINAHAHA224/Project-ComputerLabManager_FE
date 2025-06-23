@@ -11,7 +11,7 @@
   max-height: 64px !important;
   font-size: 32px !important;
   border-radius: 50% !important;
-  background: #1890ff !important;
+  background: #ff1859 !important;
   color: #fff !important;
   display: flex !important;
   align-items: center !important;
@@ -28,9 +28,9 @@
   position: fixed;
   bottom: 90px;
   right: 20px;
-  width: 400px;
-  min-height: 400px;
-  max-height: 520px;
+  width: 500px;
+  min-height: 500px;
+  max-height: 620px;
   max-width: 98vw;
   z-index: 1001;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);

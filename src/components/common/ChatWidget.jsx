@@ -8,6 +8,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import ReactMarkdown from "react-markdown";
+import { useAuth } from "../../hooks/useAuth";
 import "./ChatWidget.css";
 
 const { Text } = Typography;
@@ -21,6 +22,7 @@ const USER_AVATAR = (
 );
 
 const ChatWidget = () => {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -32,9 +34,124 @@ const ChatWidget = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const messagesEndRef = useRef(null);
   const botMsgIdRef = useRef(null);
   const aiTextRef = useRef("");
+  const welcomeCalledRef = useRef(false); // Track để tránh gọi welcome 2 lần
+
+  // Map role từ DB sang code
+  const mapDbRoleToCode = (dbRole) => {
+    const mapping = {
+      "Nhân viên phòng Giáo Vụ": "GVU",
+      "Nhân viên phòng Cơ sở vật chất": "CSVC",
+      "Giảng Viên": "GV",
+      "Trưởng khoa": "TK",
+    };
+    return mapping[dbRole] || null;
+  };
+
+  // Auto welcome message khi user login
+  useEffect(() => {
+    if (user && user.role && !hasShownWelcome && !welcomeCalledRef.current) {
+      const userRole = mapDbRoleToCode(user.role);
+      if (userRole && ["GVU", "CSVC", "TK", "GV"].includes(userRole)) {
+        console.log(`[ChatWidget] Calling welcome API for role: ${userRole}`);
+        welcomeCalledRef.current = true; // Đánh dấu đã gọi
+        setHasShownWelcome(true);
+        setIsOpen(true); // Tự động mở chat widget
+
+        // Gọi welcome API
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          console.error("[ChatWidget] No auth token found");
+          return;
+        }
+
+        const url = `http://localhost:5001/welcome?accessToken=${encodeURIComponent(token)}`;
+
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userRole }),
+        })
+          .then((response) => {
+            if (!response.body) throw new Error("No stream body");
+
+            const botMsgId = Date.now() + 1000;
+            aiTextRef.current = "";
+            botMsgIdRef.current = botMsgId;
+
+            // Thêm welcome message vào chat
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: botMsgId,
+                text: "",
+                sender: "bot",
+                timestamp: new Date().toLocaleTimeString(),
+                isMarkdown: true,
+                isStreaming: true,
+              },
+            ]);
+
+            // Stream response
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let done = false;
+
+            const readStream = async () => {
+              while (!done) {
+                const { value, done: doneReading } = await reader.read();
+                done = doneReading;
+                if (value) {
+                  const chunk = decoder.decode(value, { stream: true });
+                  aiTextRef.current += chunk;
+                  setMessages((prev) => {
+                    const cleanText = aiTextRef.current.replace(
+                      /<think>[\s\S]*?<\/think>/g,
+                      ""
+                    );
+                    return prev.map((msg) =>
+                      msg.id === botMsgIdRef.current
+                        ? { ...msg, text: cleanText }
+                        : msg
+                    );
+                  });
+                }
+              }
+              setMessages((prev) =>
+                prev.map((msg) =>
+                  msg.id === botMsgIdRef.current
+                    ? { ...msg, isStreaming: false }
+                    : msg
+                )
+              );
+            };
+
+            readStream().catch(console.error);
+          })
+          .catch((error) => {
+            console.error("Welcome API error:", error);
+            const errorMessage = {
+              id: Date.now() + 1000,
+              text: "Xin chào! Tôi là Trợ lý AI, bạn cần hỗ trợ gì?",
+              sender: "bot",
+              timestamp: new Date().toLocaleTimeString(),
+            };
+            setMessages((prev) => [...prev, errorMessage]);
+          });
+      }
+    }
+  }, [user?.role, hasShownWelcome]); // Chỉ theo dõi user.role, không phải toàn bộ user object
+
+  // Reset welcome state khi user logout
+  useEffect(() => {
+    if (!user) {
+      welcomeCalledRef.current = false;
+      setHasShownWelcome(false);
+    }
+  }, [user]);
 
   // Scroll to bottom when new messages are added
   useEffect(() => {
@@ -217,9 +334,9 @@ const ChatWidget = () => {
                           msg.sender === "user" ? "#e6f7ff" : "#f5f5f5",
                         color: "#222",
                         borderRadius: 12,
-                        padding: "8px 12px",
+                        padding: "8px 8px",
                         margin: "0 8px",
-                        maxWidth: 220,
+                        maxWidth: 400,
                         wordBreak: "break-word",
                       }}
                     >

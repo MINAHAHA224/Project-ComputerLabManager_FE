@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  redis-cache:
+    image: redis:7-alpine
+    container_name: computer-lab-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: unless-stopped
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - computer-lab-network
+
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  computer-lab-network:
+    driver: bridge
